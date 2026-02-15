@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Triage Assistant - AI-Powered Email Summarization</title>
+    <meta name="description" content="Reduce inbox overload with AI-powered email summarization, action detection, and Focus Mode.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">📧</span>
+                    <h1>Email Triage Assistant</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="darkModeToggle" class="btn-icon" title="Toggle dark mode">
+                        <span class="icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h2 class="hero-title">AI-Powered Email Intelligence</h2>
+                <p class="hero-subtitle">Compress long email threads, extract action items, and focus on what matters</p>
+            </section>
+
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📥 Paste Your Email Thread</h3>
+                        <div class="sample-selector">
+                            <label for="sampleSelect">Try a sample:</label>
+                            <select id="sampleSelect" class="sample-select">
+                                <option value="">-- Select Sample --</option>
+                                <option value="urgent_deadline">Urgent Deadline</option>
+                                <option value="meeting_coordination">Meeting Coordination</option>
+                                <option value="long_thread">Long Thread</option>
+                                <option value="fyi_update">FYI Update</option>
+                                <option value="action_required">Action Required</option>
+                                <option value="casual_quick">Casual Quick</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea 
+                            id="emailInput" 
+                            class="email-input" 
+                            placeholder="Paste your email thread here... Include headers like Subject, From, To for better analysis."
+                            rows="12"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button id="clearBtn" class="btn btn-secondary">
+                                <span class="icon">🗑️</span> Clear
+                            </button>
+                            <button id="processBtn" class="btn btn-primary">
+                                <span class="icon">✨</span> Analyze Email
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state hidden">
+                <div class="loader"></div>
+                <p>Analyzing your email with AI...</p>
+            </div>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section hidden">
+                <!-- View Toggle -->
+                <div class="view-toggle">
+                    <button id="normalViewBtn" class="view-btn active">
+                        <span class="icon">📊</span> Full Analysis
+                    </button>
+                    <button id="focusViewBtn" class="view-btn">
+                        <span class="icon">🎯</span> Focus Mode
+                    </button>
+                </div>
+
+                <!-- Normal View -->
+                <div id="normalView" class="view-content">
+                    <!-- Priority Badge -->
+                    <div class="priority-banner">
+                        <div id="priorityBadge" class="priority-badge"></div>
+                    </div>
+
+                    <!-- Summary Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📋 Summary</h3>
+                            <span id="toneBadge" class="tone-badge"></span>
+                        </div>
+                        <div class="card-body">
+                            <p id="summaryText" class="summary-text"></p>
+                            <div id="keyPoints" class="key-points"></div>
+                        </div>
+                    </div>
+
+                    <!-- Action Items Card -->
+                    <div id="actionItemsCard" class="card">
+                        <div class="card-header">
+                            <h3>✅ Action Items</h3>
+                            <span id="actionCount" class="count-badge"></span>
+                        </div>
+                        <div class="card-body">
+                            <div id="actionItemsList" class="action-items-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Metadata Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📊 Email Details</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="metadataContent" class="metadata-content"></div>
+                        </div>
+                    </div>
+
+                    <!-- Priority Breakdown -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🎯 Priority Analysis</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="priorityBreakdown" class="priority-breakdown"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Focus View -->
+                <div id="focusView" class="view-content hidden">
+                    <div class="focus-mode-card">
+                        <div class="focus-header">
+                            <h2>🎯 Focus Mode</h2>
+                            <p>Distraction-free view of what matters</p>
+                        </div>
+                        <div id="focusModeContent" class="focus-content"></div>
+                        <button id="copyFocusBtn" class="btn btn-secondary">
+                            <span class="icon">📋</span> Copy to Clipboard
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Display -->
+            <div id="errorDisplay" class="error-display hidden">
+                <div class="error-content">
+                    <span class="error-icon">⚠️</span>
+                    <p id="errorMessage"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Built with ❤️ by Olina Kundu | Powered by AI & ScaleDown Compression</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
